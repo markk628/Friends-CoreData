@@ -20,7 +20,6 @@ class ViewController: UIViewController {
     lazy var friendTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -67,6 +66,7 @@ class ViewController: UIViewController {
         
         do {
             people = try managedContext.fetch(fetchRequest)
+//            friendTableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
@@ -127,8 +127,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             do {
                 managedContext.delete(person)
                 try managedContext.save()
-                tableView.deleteRows(at: [indexPath], with: .fade)
                 people.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+//                fetchObject()
             } catch let error as NSError {
                 print(error.userInfo)
             }
